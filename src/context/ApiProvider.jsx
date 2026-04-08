@@ -14,7 +14,7 @@ const ApiProvider = ({ children }) => {
   const token    = useSelector((s) => s.auth.token);
   const dispatch = useDispatch();
 
-    const tokenRef    = useRef(token);
+  const tokenRef    = useRef(token);
   const dispatchRef = useRef(dispatch);
 
   useEffect(() => { tokenRef.current    = token;    }, [token]);
