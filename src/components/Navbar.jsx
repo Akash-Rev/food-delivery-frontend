@@ -37,7 +37,12 @@ const Navbar = () => {
       <div className="container navbar-inner">
 
         {/* Logo */}
-        <Link to="/" className="navbar-logo">🍔 QuickBite</Link>
+        <Link 
+          to={role === "restaurant_owner" ? "/restaurant/dashboard" : role === "delivery_partner" ? "/partner/dashboard" : "/"} 
+          className="navbar-logo"
+        >
+          🍔 QuickBite
+        </Link>
 
         {/* Links */}
         <div className="navbar-links">

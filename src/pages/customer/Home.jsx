@@ -1,10 +1,7 @@
   import { useEffect, useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { useApi } from "../../context/useApi";
-  import {
-    setRestaurants,
-    setLoading,
-  } from "../../store/slices/restaurantSlice";
+  import { setRestaurants, setLoading } from "../../store/slices/restaurantSlice";
   import RestaurantCard from "../../components/RestaurantCard";
   import Loader from "../../components/Loader";
   import { FiSearch, FiFilter } from "react-icons/fi";
@@ -12,6 +9,7 @@
   const CUISINES = ["All", "Indian", "Chinese", "Italian", "Fast Food", "South Indian", "Biryani"];
 
   const Home = () => {
+    
     const dispatch = useDispatch();
     const { api }  = useApi();
 

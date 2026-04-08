@@ -12,13 +12,13 @@ const STATUS_FLOW = {
   placed:    { next: "confirmed",  label: "Confirm Order",   color: "badge-info" },
   confirmed: { next: "preparing",  label: "Start Preparing", color: "badge-info" },
   preparing: { next: "ready",      label: "Mark Ready",      color: "badge-warning" },
-  ready:     { next: null,         label: "Awaiting Pickup", color: "badge-warning" },
-  picked_up: { next: null,         label: "Out for Delivery", color: "badge-warning" },
-  delivered: { next: null,         label: "Delivered",       color: "badge-success" },
-  cancelled: { next: null,         label: "Cancelled",       color: "badge-danger" },
+  ready:     { next: "picked_up",         label: "Awaiting Pickup", color: "badge-warning" },
+  picked_up: { next: "delivered",         label: "Out for Delivery", color: "badge-warning" },
+  delivered: { next: "",         label: "Delivered",       color: "badge-success" },
+  cancelled: { next: "",         label: "Cancelled",       color: "badge-danger" },
 };
 
-const TABS = ["all", "placed", "preparing", "delivered"];
+const TABS = ["all", "placed", "confirmed", "preparing", "ready", "picked_up", "delivered", "cancelled"];
 
 const Dashboard = () => {
   const { api } = useApi();
@@ -157,7 +157,7 @@ const Dashboard = () => {
             className={`tab-btn ${activeTab === t ? "tab-active" : ""}`}
             onClick={() => setActiveTab(t)}
           >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
+            {t.split('_').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
             <span className="tab-count">
               {t === "all"
                 ? orders.length

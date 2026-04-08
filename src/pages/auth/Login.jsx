@@ -30,18 +30,26 @@ const Login = () => {
     try {
       const { data } = await api.post("/auth/login", form);
 
+      let extractedRole = null;
+      try {
+        const payload = JSON.parse(atob(data.access_token.split('.')[1]));
+        extractedRole = payload.role;
+      } catch (e) {
+        console.error("Failed to decode token payload", e);
+      }
+
       dispatch(setCredentials({
         user:  { id: data.user_id, email: form.email },
         token: data.access_token,
-        role:  data.role,
+        role:  extractedRole,
       }));
 
       toast.success("Welcome back!");
 
    
-      if (data.role === "customer")         navigate("/");
-      else if (data.role === "restaurant_owner") navigate("/restaurant/dashboard");
-      else if (data.role === "delivery_partner") navigate("/partner/dashboard");
+      if (extractedRole === "customer")         navigate("/");
+      else if (extractedRole === "restaurant_owner") navigate("/restaurant/dashboard");
+      else if (extractedRole === "delivery_partner") navigate("/partner/dashboard");
 
     } catch (err) {
       toast.error(err.response?.data?.detail || "Login failed");

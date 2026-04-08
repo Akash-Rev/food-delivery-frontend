@@ -1,10 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getTokenRole = (token) => {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role || null;
+  } catch (e) {
+    return null;
+  }
+};
+
+const savedToken = localStorage.getItem("token");
+// Clean up old role key to ensure it isn't stored
+localStorage.removeItem("role");
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")) || null,
-  token: localStorage.getItem("token") || null,
-  role: localStorage.getItem("role") || null,
-  isAuthenticated: !!localStorage.getItem("token"),
+  token: savedToken || null,
+  role: getTokenRole(savedToken),
+  isAuthenticated: !!savedToken,
 };
 
 const authSlice = createSlice({
@@ -15,11 +29,11 @@ const authSlice = createSlice({
       const { user, token, role } = action.payload;
       state.user = user;
       state.token = token;
-      state.role = role;
+      state.role = getTokenRole(token) || role;
       state.isAuthenticated = true;
       localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.removeItem("role"); // Ensure role is not saved explicitly
     },
     logout: (state) => {
       state.user = null;
@@ -27,12 +41,11 @@ const authSlice = createSlice({
       state.role = null;
       state.isAuthenticated = false;
       localStorage.removeItem("token");
-      localStorage.removeItem("role");
       localStorage.removeItem("user");
+      localStorage.removeItem("role");
     },
   },
 });
 
 export const { setCredentials, logout } = authSlice.actions;
 export default authSlice.reducer;
-
